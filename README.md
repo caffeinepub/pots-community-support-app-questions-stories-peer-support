@@ -1,2 +1,3 @@
-# pots-community-support-app-questions-stories-peer-support
-Exported from Caffeine project: POTS Community Support App (Questions, Stories, Peer Support)
+## POTS Community Support App (Questions, Stories, Peer Support)
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

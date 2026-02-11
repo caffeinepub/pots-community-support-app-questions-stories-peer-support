@@ -1,0 +1,93 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-06T05:34:20.546Z",
+  "summary": "Diff adds a Motoko backend with posts/comments/reactions/reports plus an access-control/profile system, and a React frontend with routing, Internet Identity login button, feed controls (filter/search), reactions UI, comments UI (with replies), report dialog, and branding hero/banner usage. Several BuildRequest acceptance details are not clearly evidenced in the provided (truncated/partial) diff, and some extra features (profiles/roles/admin token) appear unrequested.",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Posts persist across canister upgrades using stable storage patterns.",
+      "reason": "The shown backend/main.mo excerpt defines in-memory vars/maps for posts/comments/reactions/reports, but no stable var usage, preupgrade/postupgrade hooks, or other stable persistence is evidenced in the visible diff (file is truncated).",
+      "evidence": [
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "List API returns posts in reverse-chronological order by createdAt.",
+      "reason": "Visible backend methods include getPostsByType() and searchPosts() returning filtered arrays without sorting by createdAt; a getAllPostsSorted(...) function is shown but truncated before confirming reverse-chronological by createdAt.",
+      "evidence": [
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "requirement": "Home feed lists reaction counts and comment count per post.",
+      "reason": "PostCard renders MessageSquare and Heart icons but does not display any numeric counts, nor does it show comment count values in the visible code.",
+      "evidence": [
+        "frontend/src/components/posts/PostCard.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "User profile system (save/get profile with display name) and a forced profile setup dialog.",
+      "reason": "BuildRequest does not request user profiles or mandatory name onboarding; it only requires anonymous-safe author display.",
+      "evidence": [
+        "backend/main.mo (truncated): type UserProfile, getCallerUserProfile, saveCallerUserProfile",
+        "frontend/src/components/auth/ProfileSetupDialog.tsx",
+        "frontend/src/components/layout/AppShell.tsx (includes ProfileSetupDialog)"
+      ]
+    },
+    {
+      "description": "Custom access control/roles and admin initialization via secret URL parameter (caffeineAdminToken) plus authorization mixin usage.",
+      "reason": "BuildRequest does not specify role-based access control beyond requiring authenticated principals for creating content, and does not mention admin tokens or secret-param initialization.",
+      "evidence": [
+        "backend/main.mo (truncated): AccessControl.initState(), include MixinAuthorization(...)",
+        "frontend/src/hooks/useActor.ts: getSecretParameter('caffeineAdminToken'), actor._initializeAccessControlWithSecret(adminToken)",
+        "frontend/src/hooks/useCurrentUserRole.ts"
+      ]
+    }
+  ],
+  "confidence": 0.68,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/auth/LoginButton.tsx",
+    "frontend/src/components/auth/ProfileSetupDialog.tsx",
+    "frontend/src/components/branding/HeroBanner.tsx",
+    "frontend/src/components/comments/CommentComposer.tsx",
+    "frontend/src/components/comments/CommentThread.tsx",
+    "frontend/src/components/feed/FeedControls.tsx",
+    "frontend/src/components/layout/AppShell.tsx",
+    "frontend/src/components/posts/PostCard.tsx",
+    "frontend/src/components/posts/TagsInput.tsx",
+    "frontend/src/components/reactions/ReactionBar.tsx",
+    "frontend/src/components/report/ReportDialog.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useComments.ts",
+    "frontend/src/hooks/useCreatePost.ts",
+    "frontend/src/hooks/useCurrentUserProfile.ts",
+    "frontend/src/hooks/useCurrentUserRole.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/usePostDetail.ts",
+    "frontend/src/hooks/usePosts.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/hooks/useReactions.ts",
+    "frontend/src/hooks/useReportContent.ts",
+    "frontend/src/hooks/useUserProfile.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/CommunityGuidelinesPage.tsx",
+    "frontend/src/pages/CreatePostPage.tsx",
+    "frontend/src/pages/FeedPage.tsx",
+    "frontend/src/pages/PostDetailPage.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

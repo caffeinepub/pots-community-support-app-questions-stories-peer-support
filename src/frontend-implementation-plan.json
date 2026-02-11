@@ -1,0 +1,290 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "POTS Community Support App — Frontend Plan",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Add Internet Identity sign-in/out UX and authenticated principal-aware UI state (including first-time profile setup).",
+      "acceptanceCriteria": [
+        "User can sign in with Internet Identity and see an authenticated state in the UI",
+        "User can sign out and returns to an unauthenticated state",
+        "Backend stores and returns the author identifier for created content"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the app shell with routing and top-level auth-aware layout: show signed-in vs signed-out states, include navigation to Feed/Create/Guidelines, and ensure views can access authentication state via existing InternetIdentityProvider. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/LoginButton.tsx",
+          "operation": "create",
+          "description": "Implement a login/logout button using the Internet Identity hook and clear React Query cache on logout (per selected component authorization guidance). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/ProfileSetupDialog.tsx",
+          "operation": "create",
+          "description": "Create a first-login profile setup dialog that calls getCallerUserProfile and saveCallerUserProfile, prompting for a display name and preventing 'modal flash' by respecting actor availability/loading state (per selected component authorization guidance). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useCurrentUserProfile.ts",
+          "operation": "create",
+          "description": "Add a React Query hook to fetch the caller's profile (getCallerUserProfile) with proper enabled/loading semantics based on actor readiness (per selected component authorization guidance). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useCurrentUserRole.ts",
+          "operation": "create",
+          "description": "Add a React Query hook to fetch the caller's role (getCallerUserRole) to support authenticated/guest UI gating. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Ensure actor lifecycle changes correctly trigger query invalidation/refetch for auth transitions and that unauthenticated sessions still create an anonymous actor for read-only views."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Build the home feed to list recent posts with type labeling, excerpt, author display, time, reaction counts, and comment count; integrate loading/empty/error states via React Query.",
+      "acceptanceCriteria": [
+        "Home feed loads from backend using React Query and shows loading/empty/error states",
+        "Each feed item links to a post detail page",
+        "Feed visually distinguishes \"Question\" vs \"Story\""
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/FeedPage.tsx",
+          "operation": "create",
+          "description": "Create the feed page that loads posts from the backend using React Query, renders loading/empty/error states, and displays cards with type label (Question/Story), title, excerpt, created time, and anonymous-safe author display (using user profile name when available, otherwise a safe fallback). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/posts/PostCard.tsx",
+          "operation": "create",
+          "description": "Create a reusable post card component (using existing shadcn-ui components) that visually distinguishes Question vs Story and links to the post detail route. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/usePosts.ts",
+          "operation": "create",
+          "description": "Add React Query hooks for listing posts (default reverse-chronological) using backend methods (getAllPostsSorted / getPostsByType / searchPosts) as needed by the feed. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useUserProfile.ts",
+          "operation": "create",
+          "description": "Add a React Query hook for fetching a post author's public profile (getUserProfile) and a small helper to render an anonymous-safe author label. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the FeedPage into routing as the default/top-of-app view and ensure navigation points to it. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Implement authenticated post creation flow for Questions and Stories with validation, tags, and navigation to the new post detail page; prompt sign-in for guests.",
+      "acceptanceCriteria": [
+        "User can choose post type (Question/Story)",
+        "Form validates required fields and prevents empty submissions",
+        "On successful submit, user is navigated to the new post detail page and the feed updates"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/CreatePostPage.tsx",
+          "operation": "create",
+          "description": "Create a post creation page with a type selector (Question/Story), title/body inputs, optional tags input, validation, and submission using a React Query mutation to createPost. If unauthenticated, show a sign-in prompt instead of the form. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/posts/TagsInput.tsx",
+          "operation": "create",
+          "description": "Create a lightweight tags input component (comma/enter-separated) for optional tags; keep it accessible and consistent with the app theme using existing shadcn-ui inputs. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useCreatePost.ts",
+          "operation": "create",
+          "description": "Add a React Query mutation hook for createPost that, on success, invalidates relevant post list queries and returns the created post id for navigation. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire CreatePostPage into routing and navigation; after successful creation, navigate to the post detail page route. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Build post detail view with comments, single-level replies, reactions, and authenticated gating for interactions (readable by guests).",
+      "acceptanceCriteria": [
+        "Comments load with React Query and update after posting without a full reload",
+        "Unauthenticated users can read but cannot post comments/replies/reactions (UI prompts sign-in)",
+        "Reaction toggling updates the count and the user’s selected state"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/PostDetailPage.tsx",
+          "operation": "create",
+          "description": "Create the post detail page that loads the post (getPost), reaction counts (countPostReactions), and comments (getCommentsByPost) with React Query. Provide UI for adding comments/replies and toggling reactions, gated behind authentication with clear sign-in prompts for guests. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/comments/CommentThread.tsx",
+          "operation": "create",
+          "description": "Create a comment thread UI component that renders comments and their single-level replies; supports 'Reply' action for authenticated users and read-only for guests. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/comments/CommentComposer.tsx",
+          "operation": "create",
+          "description": "Create a comment/reply composer component with validation and submit handling via React Query mutation; show a sign-in prompt when unauthenticated. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/reactions/ReactionBar.tsx",
+          "operation": "create",
+          "description": "Create a reaction bar for 'Support' and 'Helpful' that displays counts and allows authenticated users to toggle reactions (addReaction/removeReaction) and immediately reflects selected state and counts. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/usePostDetail.ts",
+          "operation": "create",
+          "description": "Add React Query hooks for getPost plus derived helpers (e.g., mapping time to display text) used by PostDetailPage. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useComments.ts",
+          "operation": "create",
+          "description": "Add React Query hooks for listing comments/replies (getCommentsByPost/getRepliesByComment) and a mutation hook for createComment that updates caches without full reload. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useReactions.ts",
+          "operation": "create",
+          "description": "Add React Query hooks/mutations for reaction counts and toggling (countPostReactions, addReaction, removeReaction) with optimistic UI updates where safe. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire PostDetailPage into routing (e.g., a route with a postId parameter) and ensure feed cards navigate to it. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Add feed filtering (All/Questions/Stories) and keyword search (title/body) that drives backend queries and can be cleared to return to the default listing.",
+      "acceptanceCriteria": [
+        "Frontend provides filter controls and a search input",
+        "Backend supports list/search query parameters (or dedicated search method) used by the frontend",
+        "Search results are reflected in the feed and can be cleared to return to default listing"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/FeedPage.tsx",
+          "operation": "modify",
+          "description": "Add filter controls (All/Questions/Stories) and a keyword search input that triggers appropriate React Query keys and uses backend searchPosts / getPostsByType. Include clear/reset behavior to return to default listing. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/feed/FeedControls.tsx",
+          "operation": "create",
+          "description": "Create a dedicated controls component (filter tabs/segmented control + search input + clear button) designed for accessibility and consistent styling. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/usePosts.ts",
+          "operation": "modify",
+          "description": "Extend post listing hooks to support filter + search parameters and stable query keys so results reflect controls and can be cleared back to defaults. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Add Community Guidelines page and a report mechanism UI for posts/comments with reason selection and backend submission.",
+      "acceptanceCriteria": [
+        "Frontend includes a Community Guidelines page with English text explaining respectful support and that content is not medical advice",
+        "Users can report a post or comment with a short reason",
+        "Backend stores reports and prevents duplicate reports by the same reporter for the same target"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/CommunityGuidelinesPage.tsx",
+          "operation": "create",
+          "description": "Create a Community Guidelines page with English content emphasizing respectful peer support and that content is not medical advice; optionally fetch and display backend-provided guidelines (getCommunityGuidelines) with a safe fallback if unavailable. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/report/ReportDialog.tsx",
+          "operation": "create",
+          "description": "Create a report dialog usable from post detail and comment UI; allow selecting a reason (ReportReason enum) and submitting via backend reportContent, with authenticated gating (prompt sign-in for guests) and clear success/error feedback. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useReportContent.ts",
+          "operation": "create",
+          "description": "Add a React Query mutation hook for reporting content (reportContent) that handles errors gracefully (including authorization failures) and provides UI-friendly mutation state. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/PostDetailPage.tsx",
+          "operation": "modify",
+          "description": "Add 'Report' actions for the post and for each comment/reply that open ReportDialog with the correct target (post/comment). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire CommunityGuidelinesPage into routing and navigation. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Create a coherent, accessible warm visual theme (avoid blue/purple as primary) with consistent typography/spacing and shadcn-ui-based styling across pages.",
+      "acceptanceCriteria": [
+        "Theme is consistently applied to navigation, feed cards, forms, and detail views",
+        "Color contrast is sufficient for readable body text and interactive elements",
+        "UI uses the existing component system without modifying immutable UI source paths"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Add global Tailwind base styles and define warm, calming CSS variables for the shadcn-ui design tokens (primary/secondary/accent/etc.) avoiding blue/purple as primary; ensure good contrast for text and interactive states."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Adjust Tailwind theme extensions if needed to support the warm palette, typography defaults, and consistent spacing without altering immutable UI component source paths."
+        },
+        {
+          "path": "frontend/src/components/layout/AppShell.tsx",
+          "operation": "create",
+          "description": "Create a reusable layout component that applies consistent page width, spacing, header/nav styling, and accessible structure across Feed/Create/Detail/Guidelines. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Adopt AppShell for all routed pages to ensure consistent theme application (navigation, spacing, and typography). Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Include and render required generated static branding images from frontend/public/assets/generated in the UI (no backend image serving).",
+      "acceptanceCriteria": [
+        "Generated images exist under frontend/public/assets/generated and are referenced by the frontend",
+        "Home page (or top of feed) displays the hero image and app mark in a sensible layout",
+        "App looks complete without requiring users to upload any images"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/pots-hero.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated hero illustration asset at this exact path and filename for static frontend serving."
+        },
+        {
+          "path": "frontend/public/assets/generated/pots-mark.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated app mark/logo asset at this exact path and filename for static frontend serving."
+        },
+        {
+          "path": "frontend/src/components/branding/HeroBanner.tsx",
+          "operation": "create",
+          "description": "Create a hero/banner component that renders the static images from frontend/public/assets/generated/pots-hero.dim_1600x900.png and frontend/public/assets/generated/pots-mark.dim_512x512.png with accessible alt text and a warm, calming layout. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/FeedPage.tsx",
+          "operation": "modify",
+          "description": "Render HeroBanner at the top of the feed page so the app has immediate branding/onboarding-like context without requiring user uploads. Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

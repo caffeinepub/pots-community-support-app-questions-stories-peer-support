@@ -1,0 +1,209 @@
+{
+  "kind": "build_request",
+  "title": "POTS Community Support App (Questions, Stories, Peer Support)",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Implement Internet Identity authentication so users can sign in/out and the app can associate content with an authenticated principal.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Create an app for people with POTS to be able to ask questions tell stories and support eachother"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can sign in with Internet Identity and see an authenticated state in the UI",
+        "User can sign out and returns to an unauthenticated state",
+        "Backend stores and returns the author identifier for created content"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Create backend data models and APIs to support community posts with two post types: \"Question\" and \"Story\", including fields: id, type, title, body, author, createdAt, and optional tags.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "ask questions tell stories"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes methods to create a post and list posts",
+        "Posts persist across canister upgrades using stable storage patterns",
+        "List API returns posts in reverse-chronological order by createdAt"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Create backend data models and APIs for peer support interactions: comments on posts (threaded to one level: reply-to-comment optional), and lightweight reactions (e.g., \"Helpful\" / \"Support\") on posts.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "support eachother"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes methods to add a comment to a post and list comments for a post",
+        "Backend exposes methods to add/remove a reaction for the signed-in user and fetch reaction counts per post",
+        "Unauthenticated users cannot create comments or reactions"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Build a frontend home feed that lists recent posts (questions and stories) with clear type labeling, title, excerpt, author display (anonymous-safe), created time, reaction counts, and comment count.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "ask questions tell stories"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Home feed loads from backend using React Query and shows loading/empty/error states",
+        "Each feed item links to a post detail page",
+        "Feed visually distinguishes \"Question\" vs \"Story\""
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Build a frontend post creation flow that allows authenticated users to create either a Question or a Story with title, body, and optional tags; unauthenticated users should be prompted to sign in.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "ask questions tell stories"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can choose post type (Question/Story)",
+        "Form validates required fields and prevents empty submissions",
+        "On successful submit, user is navigated to the new post detail page and the feed updates"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Build a frontend post detail page that displays the full post and supports peer support: viewing comments, adding a comment, replying to a comment (single-level), and reacting to the post.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "support eachother"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Comments load with React Query and update after posting without a full reload",
+        "Unauthenticated users can read but cannot post comments/replies/reactions (UI prompts sign-in)",
+        "Reaction toggling updates the count and the user’s selected state"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Add basic discovery tools: filtering the feed by post type (All / Questions / Stories) and searching posts by keyword (title/body).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "ask questions tell stories"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Frontend provides filter controls and a search input",
+        "Backend supports list/search query parameters (or dedicated search method) used by the frontend",
+        "Search results are reflected in the feed and can be cleared to return to default listing"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Add a lightweight safety layer: community guidelines page, and a report mechanism for posts/comments (store reports in backend with reason + reporter).",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "support eachother"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Frontend includes a Community Guidelines page with English text explaining respectful support and that content is not medical advice",
+        "Users can report a post or comment with a short reason",
+        "Backend stores reports and prevents duplicate reports by the same reporter for the same target"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Create a coherent, accessible visual theme for a health-support community app (avoid blue/purple as a primary palette), applying consistent typography, spacing, and component styling across all pages.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Theme is consistently applied to navigation, feed cards, forms, and detail views",
+        "Color contrast is sufficient for readable body text and interactive elements",
+        "UI uses the existing component system without modifying immutable UI source paths"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Generate and include static image assets for branding and onboarding-like context, and render them in the UI from frontend/public/assets/generated (do not serve images from the backend).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated images exist under frontend/public/assets/generated and are referenced by the frontend",
+        "Home page (or top of feed) displays the hero image and app mark in a sensible layout",
+        "App looks complete without requiring users to upload any images"
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Do not edit files under frontend/src/components/ui or any other immutable paths listed in SYSTEM_CONTEXT.",
+    "Use English for all user-facing UI text."
+  ],
+  "nonGoals": [
+    "Direct messaging or real-time chat between users",
+    "Third-party authentication providers other than Internet Identity",
+    "Medical diagnosis or treatment recommendations features",
+    "Admin dashboard for moderation (beyond storing reports)"
+  ],
+  "imageRequirements": {
+    "required": [
+      "Warm, calming hero illustration featuring abstract supportive community elements (pots-hero.dim_1600x900.png)",
+      "Simple app mark/logo combining a heart and a stylized pulse line in a minimal flat style (pots-mark.dim_512x512.png)"
+    ],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-implement-internet-identity-authentication-so-users-can-sign-in-out-and-the-app-can-associate-content-with-an-authenticated-principal",
+      "featureTitle": "Implement Internet Identity authentication so users can sign in/out and the app can associate content with an authenticated principal.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/auth/LoginButton.tsx",
+        "frontend/src/components/auth/ProfileSetupDialog.tsx",
+        "frontend/src/hooks/useActor.ts",
+        "frontend/src/hooks/useCurrentUserProfile.ts",
+        "frontend/src/hooks/useCurrentUserRole.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-a-frontend-home-feed-that-lists-recent-posts-questions-and-stories-with-clear-type-labeling-title-excerpt-author-display-anonymous-safe-created-time-reaction-counts-and-comment-count",
+      "featureTitle": "Build a frontend home feed that lists recent posts (questions and stories) with clear type labeling, title, excerpt, author display (anonymous-safe), created time, reaction counts, and comment count.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/posts/PostCard.tsx",
+        "frontend/src/hooks/usePosts.ts",
+        "frontend/src/hooks/useUserProfile.ts",
+        "frontend/src/pages/FeedPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-a-frontend-post-creation-flow-that-allows-authenticated-users-to-create-either-a-question-or-a-story-with-title-body-and-optional-tags-unauthenticated-users-should-be-prompted-to-sign-in",
+      "featureTitle": "Build a frontend post creation flow that allows authenticated users to create either a Question or a Story with title, body, and optional tags; unauthenticated users should be prompted to sign in.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/posts/TagsInput.tsx",
+        "frontend/src/hooks/useCreatePost.ts",
+        "frontend/src/pages/CreatePostPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-a-frontend-post-detail-page-that-displays-the-full-post-and-supports-peer-support-viewing-comments-adding-a-comment-replying-to-a-comment-single-level-and-reacting-to-the-post",
+      "featureTitle": "Build a frontend post detail page that displays the full post and supports peer support: viewing comments, adding a comment, replying to a comment (single-level), and reacting to the post.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/comments/CommentComposer.tsx",
+        "frontend/src/components/comments/CommentThread.tsx",
+        "frontend/src/components/reactions/ReactionBar.tsx",
+        "frontend/src/hooks/useComments.ts",
+        "frontend/src/hooks/usePostDetail.ts",
+        "frontend/src/hooks/useReactions.ts",
+        "frontend/src/pages/PostDetailPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-basic-discovery-tools-filtering-the-feed-by-post-type-all-questions-stories-and-searching-posts-by-keyword-title-body",
+      "featureTitle": "Add basic discovery tools: filtering the feed by post type (All / Questions / Stories) and searching posts by keyword (title/body).",
+      "files": [
+        "frontend/src/components/feed/FeedControls.tsx",
+        "frontend/src/hooks/usePosts.ts",
+        "frontend/src/pages/FeedPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-lightweight-safety-layer-community-guidelines-page-and-a-report-mechanism-for-posts-comments-store-reports-in-backend-with-reason-reporter",
+      "featureTitle": "Add a lightweight safety layer: community guidelines page, and a report mechanism for posts/comments (store reports in backend with reason + reporter).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/report/ReportDialog.tsx",
+        "frontend/src/hooks/useReportContent.ts",
+        "frontend/src/pages/CommunityGuidelinesPage.tsx",
+        "frontend/src/pages/PostDetailPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-coherent-accessible-visual-theme-for-a-health-support-community-app-avoid-blue-purple-as-a-primary-palette-applying-consistent-typography-spacing-and-component-styling-across-all-pages",
+      "featureTitle": "Create a coherent, accessible visual theme for a health-support community app (avoid blue/purple as a primary palette), applying consistent typography, spacing, and component styling across all pages.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/layout/AppShell.tsx",
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-generate-and-include-static-image-assets-for-branding-and-onboarding-like-context-and-render-them-in-the-ui-from-frontend-public-assets-generated-do-not-serve-images-from-the-backend",
+      "featureTitle": "Generate and include static image assets for branding and onboarding-like context, and render them in the UI from frontend/public/assets/generated (do not serve images from the backend).",
+      "files": [
+        "frontend/src/components/branding/HeroBanner.tsx",
+        "frontend/src/pages/FeedPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
